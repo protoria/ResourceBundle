@@ -12,7 +12,7 @@ Add the bundle to your `composer.json`:
         }
     ],
 
-    "igdr/manager-bundle" : "dev-master"
+    "igdr/resource-bundle" : "dev-master"
 
 and run:
 

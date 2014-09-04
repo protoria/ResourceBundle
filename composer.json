@@ -1,5 +1,5 @@
 {
-    "name": "igdr/manager-bundle",
+    "name": "igdr/resource-bundle",
     "type": "symfony-bundle",
     "description": "Resource Bundle",
     "keywords": ["Igdr", "Resource"],
