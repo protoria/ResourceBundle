@@ -1,0 +1,3 @@
+resource_routes:
+    resource: .
+    type: resources

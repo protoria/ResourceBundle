@@ -1,0 +1,10 @@
+services:
+    resource.controller.abstract:
+        class: Igdr\Bundle\ResourceBundle\Controller\ResourceController
+        calls:
+            - [setContainer, [@service_container]]
+
+    resource.controller.configuration_factory:
+        class: Igdr\Bundle\ResourceBundle\Controller\ConfigurationFactory
+        calls:
+            - [setManagerFactory, [@core.manager.factory]]
