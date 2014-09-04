@@ -14,7 +14,7 @@ use Symfony\Component\Yaml\Yaml;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class ApplicationResourceExtension extends Extension
+class IgdrResourceExtension extends Extension
 {
     /**
      * {@inheritDoc}
@@ -81,12 +81,12 @@ class ApplicationResourceExtension extends Extension
             $resourceName = ucfirst($arr[1]);
 
             //form
-            $definition = new Definition(sprintf('Application\%sBundle\Form\Type\%sType', $bundleName, $resourceName));
+            $definition = new Definition(sprintf('Igdr\%sBundle\Form\Type\%sType', $bundleName, $resourceName));
             $definition->addTag('form.type', array('alias' => str_replace('.', '_', $name)));
             $container->setDefinition($arr[0] . '.form.' . $arr[1], $definition);
 
             //grid
-            $definition = new Definition(sprintf('Application\%sBundle\Grid\Type\%sType', $bundleName, $resourceName));
+            $definition = new Definition(sprintf('Igdr\%sBundle\Grid\Type\%sType', $bundleName, $resourceName));
             $container->setDefinition($arr[0] . '.grid.' . $arr[1], $definition);
 
             //manager

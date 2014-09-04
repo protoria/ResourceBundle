@@ -14,6 +14,19 @@ class ConfigurationFactory
     private $managerFactory;
 
     /**
+     * @var array
+     */
+    private $defaults;
+
+    /**
+     * @param array $defaults
+     */
+    public function __construct(array $defaults = array())
+    {
+        $this->defaults = $defaults;
+    }
+
+    /**
      * @param ManagerFactory $managerFactory
      *
      * @return $this
@@ -34,6 +47,8 @@ class ConfigurationFactory
      */
     public function create($bundle, $resource, array $config)
     {
+        $config = $config + $this->defaults;
+
         $configuration = new Configuration();
         $configuration->setManagerFactory($this->managerFactory);
         $configuration->setBundle($bundle);

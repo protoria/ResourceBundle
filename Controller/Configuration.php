@@ -22,12 +22,12 @@ class Configuration
     /**
      * @var string
      */
-    private $templateUpdate = '@ApplicationAdmin/Abstract/update.html.twig';
+    private $templateUpdate;
 
     /**
      * @var string
      */
-    private $templateIndex = '@ApplicationAdmin/Abstract/index.html.twig';
+    private $templateIndex;
 
     /**
      * @var string

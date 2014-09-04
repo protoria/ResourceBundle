@@ -27,6 +27,6 @@ class IgdrCoreExtension extends Extension
      */
     public function getAlias()
     {
-        return 'igdr_manager';
+        return 'igdr_resource';
     }
 }
