@@ -3,11 +3,18 @@
     "type": "symfony-bundle",
     "description": "Resource Bundle",
     "keywords": ["Igdr", "Resource"],
+    "repositories": [
+        {
+            "type": "git",
+            "url": "git@github.com:igdr/ManagerBundle.git"
+        }
+    ],
     "require": {
         "php": ">=5.3.3",
         "symfony/symfony": "2.5.*",
         "doctrine/orm": "~2.2,>=2.2.3",
-        "doctrine/doctrine-bundle": "~1.2"
+        "doctrine/doctrine-bundle": "~1.2",
+        "igdr/manager-bundle": "dev-master"
     },
     "autoload": {
         "psr-0": {
