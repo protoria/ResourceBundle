@@ -1,17 +1,15 @@
 <?php
 namespace Igdr\Bundle\ResourceBundle\Controller;
 
-use Igdr\Bundle\ManagerBundle\Manager\ManagerFactory;
+use Igdr\Bundle\ManagerBundle\Model\ManagerFactoryInterface;
+use Igdr\Bundle\ManagerBundle\Model\ManagerFactoryTrait;
 
 /**
  * Class ConfigurationFactory
  */
-class ConfigurationFactory
+class ConfigurationFactory implements ManagerFactoryInterface
 {
-    /**
-     * @var ManagerFactory
-     */
-    private $managerFactory;
+    use ManagerFactoryTrait;
 
     /**
      * @var array
@@ -24,18 +22,6 @@ class ConfigurationFactory
     public function __construct(array $defaults = array())
     {
         $this->defaults = $defaults;
-    }
-
-    /**
-     * @param ManagerFactory $managerFactory
-     *
-     * @return $this
-     */
-    public function setManagerFactory($managerFactory)
-    {
-        $this->managerFactory = $managerFactory;
-
-        return $this;
     }
 
     /**
@@ -55,8 +41,8 @@ class ConfigurationFactory
         $configuration->setResource($resource);
         isset($config['form_type']) && $configuration->setForm($config['form_type']);
         isset($config['manager']) && $configuration->setManager($config['manager']);
-        isset($config['template']) && $configuration->setTemplateIndex($config['template']);
-        isset($config['template']) && $configuration->setTemplateUpdate($config['template']);
+        isset($config['form']['index']['template']) && $configuration->setTemplateIndex($config['form']['index']['template']);
+        isset($config['form']['edit']['template']) && $configuration->setTemplateUpdate($config['form']['edit']['template']);
 
         return $configuration;
     }

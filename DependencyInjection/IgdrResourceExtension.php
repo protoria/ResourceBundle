@@ -24,15 +24,20 @@ class IgdrResourceExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
 
+        //load configuration
+        $configuration = $this->getConfiguration($configs, $container);
+        $config        = $this->processConfiguration($configuration, $configs);
+
+        $container->setParameter('igdr_resource.config.defaults', $config);
+
         //load resource configuration
-        $this->loadResourcesConfiguration($configs, $container);
+        $this->loadResourcesConfiguration($container);
     }
 
     /**
-     * @param array            $configs
      * @param ContainerBuilder $container
      */
-    private function loadResourcesConfiguration(array $configs, ContainerBuilder $container)
+    private function loadResourcesConfiguration(ContainerBuilder $container)
     {
         $configuredResources = array();
 
@@ -47,7 +52,7 @@ class IgdrResourceExtension extends Extension
         }
 
         // validate menu configurations
-        $configuration       = new Configuration();
+        $configuration       = new ResourceConfiguration();
         $configuredResources = $this->processConfiguration($configuration, array('resources' => $configuredResources));
 
         if (!empty($configuredResources)) {
@@ -81,19 +86,19 @@ class IgdrResourceExtension extends Extension
             $resourceName = ucfirst($arr[1]);
 
             //form
-            $definition = new Definition(sprintf('Igdr\%sBundle\Form\Type\%sType', $bundleName, $resourceName));
+            $definition = new Definition(sprintf('App\Bundle\%sBundle\Form\Type\%sType', $bundleName, $resourceName));
             $definition->addTag('form.type', array('alias' => str_replace('.', '_', $name)));
             $container->setDefinition($arr[0] . '.form.' . $arr[1], $definition);
 
             //grid
-            $definition = new Definition(sprintf('Igdr\%sBundle\Grid\Type\%sType', $bundleName, $resourceName));
+            $definition = new Definition(sprintf('App\Bundle\%sBundle\Grid\Type\%sType', $bundleName, $resourceName));
             $container->setDefinition($arr[0] . '.grid.' . $arr[1], $definition);
 
             //manager
             if (isset($config['manager'])) {
                 $manager = $config['manager'];
 
-                $definition = new DefinitionDecorator('core.manager.standard');
+                $definition = new DefinitionDecorator('igdr_manager.manager.standard');
                 if (isset($manager['class'])) {
                     $definition->setClass($manager['class']);
                 }
