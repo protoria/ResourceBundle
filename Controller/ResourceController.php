@@ -17,6 +17,11 @@ class ResourceController extends Controller
     const CMD_APPLY = 'apply';
 
     /**
+     * @var string
+     */
+    const CMD_CREATE_ANOTHER = 'create_another';
+
+    /**
      * @var Configuration
      */
     private $configuration = null;
@@ -27,10 +32,7 @@ class ResourceController extends Controller
     protected function getConfiguration()
     {
         if ($this->configuration === null) {
-            $arr = explode('.', $this->getRequest()->attributes->get('_route'));
-
-            $configuration = (array) $this->getRequest()->get('_configuration');
-            $this->configuration = $this->get('resource.controller.configuration_factory')->create($arr[1], $arr[2], $configuration);
+            $this->configuration = $this->get('resource.controller.configuration_factory')->create();
         }
 
         return $this->configuration;
@@ -63,7 +65,7 @@ class ResourceController extends Controller
 
         //render
         return $this->render(
-            $configuration->getTemplateIndex(),
+            $configuration->getTemplate(),
             array(
                 'grid'          => $grid,
                 'createUrl'     => $this->createUrl($request, 'add'),
@@ -116,7 +118,7 @@ class ResourceController extends Controller
 
         //render
         return $this->render(
-            $configuration->getTemplateUpdate(),
+            $configuration->getTemplate(),
             array(
                 'form'          => $form->createView(),
                 'backUrl'       => $this->createUrl($request, 'index'),
@@ -210,6 +212,8 @@ class ResourceController extends Controller
     {
         if ($request->get('cmd') == self::CMD_APPLY && $id) {
             $url = $this->createUrl($request, 'edit', array('id' => $id));
+        } elseif ($request->get('cmd') == self::CMD_CREATE_ANOTHER) {
+            $url = $this->createUrl($request, 'add');
         } else {
             $url = $this->createUrl($request, 'index');
         }

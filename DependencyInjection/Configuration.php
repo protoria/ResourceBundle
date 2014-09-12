@@ -35,7 +35,7 @@ class Configuration implements ConfigurationInterface
     {
         $node
             ->children()
-                ->arrayNode('form')
+                ->arrayNode('controller')
                     ->children()
                         ->arrayNode('index')
                             ->children()

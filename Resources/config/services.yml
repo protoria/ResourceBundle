@@ -6,6 +6,6 @@ services:
 
     resource.controller.configuration_factory:
         class: Igdr\Bundle\ResourceBundle\Controller\ConfigurationFactory
-        arguments: [%igdr_resource.config.defaults%]
+        arguments: [@request_stack, %igdr_resource.config.defaults%]
         calls:
             - [setManagerFactory, [@igdr_manager.manager.factory]]

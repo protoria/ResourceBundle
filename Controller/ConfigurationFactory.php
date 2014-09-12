@@ -3,6 +3,7 @@ namespace Igdr\Bundle\ResourceBundle\Controller;
 
 use Igdr\Bundle\ManagerBundle\Model\ManagerFactoryInterface;
 use Igdr\Bundle\ManagerBundle\Model\ManagerFactoryTrait;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Class ConfigurationFactory
@@ -17,33 +18,77 @@ class ConfigurationFactory implements ManagerFactoryInterface
     private $defaults;
 
     /**
-     * @param array $defaults
+     * @var RequestStack
      */
-    public function __construct(array $defaults = array())
+    private $requestStack;
+
+    /**
+     * @param RequestStack $requestStack
+     * @param array        $defaults
+     */
+    public function __construct(RequestStack $requestStack, array $defaults = array())
     {
-        $this->defaults = $defaults;
+        $this->defaults     = $defaults;
+        $this->requestStack = $requestStack;
     }
 
     /**
-     * @param string $bundle
-     * @param string $resource
-     * @param array  $config
-     *
      * @return Configuration
      */
-    public function create($bundle, $resource, array $config)
+    public function create()
     {
-        $config = $config + $this->defaults;
+        $config = $this->getConfiguration() + $this->getDefaults();
 
         $configuration = new Configuration();
         $configuration->setManagerFactory($this->managerFactory);
-        $configuration->setBundle($bundle);
-        $configuration->setResource($resource);
+        $configuration->setBundle($this->getBundle());
+        $configuration->setResource($this->getResource());
         isset($config['form_type']) && $configuration->setForm($config['form_type']);
         isset($config['manager']) && $configuration->setManager($config['manager']);
-        isset($config['form']['index']['template']) && $configuration->setTemplateIndex($config['form']['index']['template']);
-        isset($config['form']['edit']['template']) && $configuration->setTemplateUpdate($config['form']['edit']['template']);
+        isset($config['template']) && $configuration->setTemplate($config['template']);
 
         return $configuration;
+    }
+
+    /**
+     * @return string
+     */
+    private function getBundle()
+    {
+        $chunks = explode('.', $this->requestStack->getMasterRequest()->attributes->get('_route'));
+
+        return $chunks[1];
+    }
+
+    /**
+     * @return string
+     */
+    private function getResource()
+    {
+        $chunks = explode('.', $this->requestStack->getMasterRequest()->attributes->get('_route'));
+
+        return $chunks[2];
+    }
+
+    /**
+     * @return array
+     */
+    private function getConfiguration()
+    {
+        return (array) $this->requestStack->getMasterRequest()->attributes->get('_configuration');
+    }
+
+    /**
+     * @return array
+     */
+    private function getDefaults()
+    {
+        $chunks = explode('.', $this->requestStack->getMasterRequest()->attributes->get('_route'));
+        $action = array_pop($chunks);
+        if ($action == 'add') {
+            $action = 'edit';
+        }
+
+        return isset($this->defaults['controller'][$action]) ? $this->defaults['controller'][$action] : array();
     }
 }

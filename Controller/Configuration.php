@@ -22,12 +22,7 @@ class Configuration
     /**
      * @var string
      */
-    private $templateUpdate;
-
-    /**
-     * @var string
-     */
-    private $templateIndex;
+    private $template;
 
     /**
      * @var string
@@ -140,13 +135,13 @@ class Configuration
     }
 
     /**
-     * @param string $templateIndex
+     * @param string $template
      *
      * @return Configuration
      */
-    public function setTemplateIndex($templateIndex)
+    public function setTemplate($template)
     {
-        $this->templateIndex = $templateIndex;
+        $this->template = $template;
 
         return $this;
     }
@@ -154,29 +149,9 @@ class Configuration
     /**
      * @return string
      */
-    public function getTemplateIndex()
+    public function getTemplate()
     {
-        return $this->templateIndex;
-    }
-
-    /**
-     * @param string $templateUpdate
-     *
-     * @return Configuration
-     */
-    public function setTemplateUpdate($templateUpdate)
-    {
-        $this->templateUpdate = $templateUpdate;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTemplateUpdate()
-    {
-        return $this->templateUpdate;
+        return $this->template;
     }
 
     /**
