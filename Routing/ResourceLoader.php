@@ -51,7 +51,7 @@ class ResourceLoader implements LoaderInterface
 
             $routes->add($id . '.edit', new Route($path . '/edit/{id}', array(
                 '_controller'    => 'resource.controller.abstract:editAction',
-                '_configuration' => isset($config['controller']['edit']) ? array($config['controller']['edit']) : array()
+                '_configuration' => isset($config['controller']['edit']) ? $config['controller']['edit'] : array()
             )));
 
             $routes->add($id . '.add', new Route($path . '/add', array(
