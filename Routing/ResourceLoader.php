@@ -30,6 +30,30 @@ class ResourceLoader implements LoaderInterface
     }
 
     /**
+     * @param array  $config
+     * @param string $action
+     *
+     * @return string
+     */
+    private function getController($config, $action)
+    {
+        $controller = isset($config['controller']['id']) ? $config['controller']['id'] : 'resource.controller.abstract';
+
+        return sprintf('%s:%s%s', $controller, $action, strpos($controller, '.') !== false ? 'Action' : '');
+    }
+
+    /**
+     * @param array  $config
+     * @param string $action
+     *
+     * @return array
+     */
+    private function getControllerConfiguration($config, $action)
+    {
+        return isset($config['controller'][$action]) ? $config['controller'][$action] : array();
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function load($resource, $type = null)
@@ -45,24 +69,24 @@ class ResourceLoader implements LoaderInterface
             $id   = 'admin.' . $name;
 
             $routes->add($id . '.index', new Route($path, array(
-                '_controller'    => 'resource.controller.abstract:indexAction',
-                '_configuration' => isset($config['controller']['index']) ? $config['controller']['index'] : array()
+                '_controller'    => $this->getController($config, 'index'),
+                '_configuration' => $this->getControllerConfiguration($config, 'index')
             )));
 
             $routes->add($id . '.edit', new Route($path . '/edit/{id}', array(
-                '_controller'    => 'resource.controller.abstract:editAction',
-                '_configuration' => isset($config['controller']['edit']) ? $config['controller']['edit'] : array()
+                '_controller'    => $this->getController($config, 'edit'),
+                '_configuration' => $this->getControllerConfiguration($config, 'edit')
             )));
 
             $routes->add($id . '.add', new Route($path . '/add', array(
-                '_controller'    => 'resource.controller.abstract:editAction',
+                '_controller'    => $this->getController($config, 'edit'),
                 'id'             => 0,
-                '_configuration' => isset($config['controller']['edit']) ? $config['controller']['edit'] : array()
+                '_configuration' => $this->getControllerConfiguration($config, 'edit')
             )));
 
             $routes->add($id . '.delete', new Route($path . '/delete/{id}', array(
-                '_controller'    => 'resource.controller.abstract:deleteAction',
-                '_configuration' => isset($config['controller']['delete']) ? $config['controller']['delete'] : array()
+                '_controller'    => $this->getController($config, 'delete'),
+                '_configuration' => $this->getControllerConfiguration($config, 'delete')
             )));
         }
 

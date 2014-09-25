@@ -91,7 +91,7 @@ class ResourceController extends Controller
         }
 
         //get data
-        $entity = $this->getEntity($id);
+        $entity = $this->getEntity($id, $request);
 
         //create form
         $form = $this->createForm($configuration->getForm(), $entity);
@@ -150,12 +150,13 @@ class ResourceController extends Controller
     }
 
     /**
-     * @param int $id
+     * @param int     $id
+     * @param Request $request
      *
      * @return null|object
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    private function getEntity($id)
+    protected function getEntity($id, Request $request)
     {
         //get data
         $manager = $this->getConfiguration()->getManager();
