@@ -96,7 +96,7 @@ class IgdrResourceExtension extends Extension
 
             //grid
             $id    = $arr[0] . '.grid.' . $arr[1];
-            $class = sprintf('App\Bundle\%sBundle\Grid\Type\%sType', $bundleName, $resourceName);
+            $class = sprintf('App\Bundle\%sBundle\Grid\Type\Admin\%sType', $bundleName, $resourceName);
             if (class_exists($class)) {
                 $definition = new Definition(sprintf('App\Bundle\%sBundle\Grid\Type\Admin\%sType', $bundleName, $resourceName));
 
