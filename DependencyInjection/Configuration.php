@@ -35,6 +35,12 @@ class Configuration implements ConfigurationInterface
     {
         $node
             ->children()
+                ->scalarNode('base_url')
+                    ->defaultValue('/admin')
+                ->end()
+                ->scalarNode('route_prefix')
+                    ->defaultValue('admin')
+                ->end()
                 ->arrayNode('controller')
                     ->children()
                         ->arrayNode('index')

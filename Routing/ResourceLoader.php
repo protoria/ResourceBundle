@@ -22,11 +22,18 @@ class ResourceLoader implements LoaderInterface
     private $resources = array();
 
     /**
-     * @param array $resources
+     * @var array
      */
-    public function __construct(array $resources)
+    private $defaults;
+
+    /**
+     * @param array $resources
+     * @param array $defaults
+     */
+    public function __construct(array $resources, $defaults)
     {
         $this->resources = $resources;
+        $this->defaults  = $defaults;
     }
 
     /**
@@ -65,8 +72,8 @@ class ResourceLoader implements LoaderInterface
         $routes = new RouteCollection();
 
         foreach ($this->resources as $name => $config) {
-            $path = '/admin/' . str_replace('.', '/', $name);
-            $id   = 'admin.' . $name;
+            $path = rtrim($this->defaults['base_url'], '/') . '/' . str_replace('.', '/', $name);
+            $id   = $this->defaults['route_prefix'] . '.' . $name;
 
             $routes->add($id . '.index', new Route($path, array(
                 '_controller'    => $this->getController($config, 'index'),

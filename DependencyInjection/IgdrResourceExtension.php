@@ -70,7 +70,7 @@ class IgdrResourceExtension extends Extension
     {
         $definition = new Definition('Igdr\Bundle\ResourceBundle\Routing\ResourceLoader');
         $definition->addTag('routing.loader');
-        $definition->setArguments(array($configs));
+        $definition->setArguments(array($configs, $container->getParameter('igdr_resource.config.defaults')));
 
         $container->setDefinition('resource.routing.loader', $definition);
     }
