@@ -6,6 +6,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\Yaml\Yaml;
 
@@ -82,17 +83,30 @@ class IgdrResourceExtension extends Extension
     {
         foreach ($configs as $name => $config) {
             $arr          = explode('.', $name);
-            $bundleName   = ucfirst($arr[0]);
-            $resourceName = ucfirst($arr[1]);
+            $bundleName   = $this->camelize($arr[0]);
+            $resourceName = $this->camelize($arr[1]);
 
             //form
-            $definition = new Definition(sprintf('App\Bundle\%sBundle\Form\Type\%sType', $bundleName, $resourceName));
-            $definition->addTag('form.type', array('alias' => str_replace('.', '_', $name)));
-            $container->setDefinition($arr[0] . '.form.' . $arr[1], $definition);
+            $id = $arr[0] . '.form.' . $arr[1];
+            if ($container->hasDefinition($id) === false) {
+                $definition = new Definition(sprintf('App\Bundle\%sBundle\Form\Type\Admin\%sType', $bundleName, $resourceName));
+                $definition->addTag('form.type', array('alias' => str_replace('.', '_', $name)));
+                $container->setDefinition($id, $definition);
+            }
 
             //grid
-            $definition = new Definition(sprintf('App\Bundle\%sBundle\Grid\Type\%sType', $bundleName, $resourceName));
-            $container->setDefinition($arr[0] . '.grid.' . $arr[1], $definition);
+            $id    = $arr[0] . '.grid.' . $arr[1];
+            $class = sprintf('App\Bundle\%sBundle\Grid\Type\%sType', $bundleName, $resourceName);
+            if (class_exists($class)) {
+                $definition = new Definition(sprintf('App\Bundle\%sBundle\Grid\Type\Admin\%sType', $bundleName, $resourceName));
+
+                $reflection = new \ReflectionClass($class);
+                if ($reflection->implementsInterface('\Symfony\Component\DependencyInjection\ContainerAwareInterface')) {
+                    $definition->addMethodCall('setContainer', [new Reference('service_container')]);
+                }
+
+                $container->setDefinition($id, $definition);
+            }
 
             //manager
             if (isset($config['manager'])) {
@@ -107,5 +121,15 @@ class IgdrResourceExtension extends Extension
                 $container->setDefinition($arr[0] . '.manager.' . $arr[1], $definition);
             }
         }
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return string
+     */
+    public function camelize($name)
+    {
+        return str_replace(' ', '', ucwords(preg_replace('/[^A-Z^a-z^0-9]+/', ' ', $name)));
     }
 }
