@@ -5,13 +5,6 @@ Installation
 
 Add the bundle to your `composer.json`:
 
-    "repositories": [
-        {
-            "type": "git",
-            "url": "git@github.com:igdr/ResourceBundle.git"
-        }
-    ],
-
     "igdr/resource-bundle" : "dev-master"
 
 and run:
@@ -29,3 +22,15 @@ Then add the ResourceBundle to your application kernel:
             // ...
         );
     }
+
+Add configuration to config.yml
+
+    igdr_resource:
+        namespace:
+            form: "App\Bundle\{Bundle}Bundle\Form\Type\Admin\{Entity}Type"   #Namespace mask for form types
+            grid: "App\Bundle\{Bundle}Bundle\Grid\Type\Admin\{Entity}Type"   #Namespace mask for grid types
+        controller:
+            index:
+                template: "@AppBase/Admin/Abstract/index.html.twig"           
+            edit:
+                template: "@AppBase/Admin/Abstract/edit.html.twig"

@@ -81,6 +81,7 @@ class IgdrResourceExtension extends Extension
      */
     private function createResourceServices(array $configs, ContainerBuilder $container)
     {
+        $defaults = $container->getParameter('igdr_resource.config.defaults');
         foreach ($configs as $name => $config) {
             $arr          = explode('.', $name);
             $bundleName   = $this->camelize($arr[0]);
@@ -88,17 +89,24 @@ class IgdrResourceExtension extends Extension
 
             //form
             $id = $arr[0] . '.form.' . $arr[1];
-            if ($container->hasDefinition($id) === false) {
-                $definition = new Definition(sprintf('App\Bundle\%sBundle\Form\Type\Admin\%sType', $bundleName, $resourceName));
+            $class      = $this->formatFormName($bundleName, $resourceName, $defaults);
+            if ($container->hasDefinition($id) === false && class_exists($class)) {
+                $definition = new Definition($class);
                 $definition->addTag('form.type', array('alias' => str_replace('.', '_', $name)));
+
+                $reflection = new \ReflectionClass($class);
+                if ($reflection->implementsInterface('\Symfony\Component\DependencyInjection\ContainerAwareInterface')) {
+                    $definition->addMethodCall('setContainer', [new Reference('service_container')]);
+                }
+
                 $container->setDefinition($id, $definition);
             }
 
             //grid
             $id    = $arr[0] . '.grid.' . $arr[1];
-            $class = sprintf('App\Bundle\%sBundle\Grid\Type\Admin\%sType', $bundleName, $resourceName);
+            $class = $this->formatGridName($bundleName, $resourceName, $defaults);
             if (class_exists($class)) {
-                $definition = new Definition(sprintf('App\Bundle\%sBundle\Grid\Type\Admin\%sType', $bundleName, $resourceName));
+                $definition = new Definition($class);
 
                 $reflection = new \ReflectionClass($class);
                 if ($reflection->implementsInterface('\Symfony\Component\DependencyInjection\ContainerAwareInterface')) {
@@ -116,7 +124,7 @@ class IgdrResourceExtension extends Extension
                 if (isset($manager['class'])) {
                     $definition->setClass($manager['class']);
                 }
-                $definition->setArguments(array($manager['entity'], $manager['repository'], @$manager['where'], @$manager['order']));
+                $definition->setArguments(array($manager['entity'], $manager['repository'], $manager['where'], $manager['order'], $manager['cache']));
                 $definition->setScope('prototype');
                 $container->setDefinition($arr[0] . '.manager.' . $arr[1], $definition);
             }
@@ -124,11 +132,35 @@ class IgdrResourceExtension extends Extension
     }
 
     /**
+     * @param string $bundle
+     * @param string $entity
+     * @param array  $defaults
+     *
+     * @return string
+     */
+    private function formatFormName($bundle, $entity, $defaults)
+    {
+        return str_replace(array('{Bundle}', '{Entity}'), array($bundle, $entity), $defaults['namespace']['form']);
+    }
+
+    /**
+     * @param string $bundle
+     * @param string $entity
+     * @param array  $defaults
+     *
+     * @return string
+     */
+    private function formatGridName($bundle, $entity, $defaults)
+    {
+        return str_replace(array('{Bundle}', '{Entity}'), array($bundle, $entity), $defaults['namespace']['grid']);
+    }
+
+    /**
      * @param string $name
      *
      * @return string
      */
-    public function camelize($name)
+    private function camelize($name)
     {
         return str_replace(' ', '', ucwords(preg_replace('/[^A-Z^a-z^0-9]+/', ' ', $name)));
     }

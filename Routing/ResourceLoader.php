@@ -61,6 +61,16 @@ class ResourceLoader implements LoaderInterface
     }
 
     /**
+     * @param array $config
+     *
+     * @return bool
+     */
+    private function isControllerExist($config)
+    {
+        return isset($config['controller']) && !empty($config['controller']['id']);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function load($resource, $type = null)
@@ -72,6 +82,10 @@ class ResourceLoader implements LoaderInterface
         $routes = new RouteCollection();
 
         foreach ($this->resources as $name => $config) {
+            if (!$this->isControllerExist($config)) {
+                continue;
+            }
+
             $path = rtrim($this->defaults['base_url'], '/') . '/' . str_replace('.', '/', $name);
             $id   = $this->defaults['route_prefix'] . '.' . $name;
 
