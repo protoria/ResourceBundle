@@ -88,8 +88,8 @@ class IgdrResourceExtension extends Extension
             $resourceName = $this->camelize($arr[1]);
 
             //form
-            $id = $arr[0] . '.form.' . $arr[1];
-            $class      = $this->formatFormName($bundleName, $resourceName, $defaults);
+            $id    = $arr[0] . '.form.' . $arr[1];
+            $class = $this->formatFormName($bundleName, $resourceName, $defaults);
             if ($container->hasDefinition($id) === false && class_exists($class)) {
                 $definition = new Definition($class);
                 $definition->addTag('form.type', array('alias' => str_replace('.', '_', $name)));
@@ -127,6 +127,9 @@ class IgdrResourceExtension extends Extension
                 $definition->setArguments(array($manager['entity'], $manager['repository'], $manager['where'], $manager['order'], $manager['cache']));
                 $definition->setScope('prototype');
                 $container->setDefinition($arr[0] . '.manager.' . $arr[1], $definition);
+
+                //register in parameters
+                $this->regiterManagerInParameters($name, $manager, $container);
             }
         }
     }
@@ -163,5 +166,17 @@ class IgdrResourceExtension extends Extension
     private function camelize($name)
     {
         return str_replace(' ', '', ucwords(preg_replace('/[^A-Z^a-z^0-9]+/', ' ', $name)));
+    }
+
+    /**
+     * @param string           $resource
+     * @param array            $manager
+     * @param ContainerBuilder $container
+     */
+    private function regiterManagerInParameters($resource, array $manager, ContainerBuilder $container)
+    {
+        foreach ($manager as $key => $value) {
+            $container->setParameter(sprintf('igdr_resource.config.defaults.%s.manager.%s', $resource, $key), $value);
+        }
     }
 }
