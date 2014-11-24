@@ -48,7 +48,7 @@ class ResourceController extends Controller
     {
         $configuration = $this->getConfiguration();
 
-        if (!$this->get('security.context')->isGranted($configuration->getAccess())) {
+        if (!$this->get('security.context')->isGranted($configuration->getSecurity())) {
             throw new AccessDeniedHttpException();
         }
 
@@ -86,7 +86,7 @@ class ResourceController extends Controller
     {
         $configuration = $this->getConfiguration();
 
-        if (!$this->get('security.context')->isGranted($configuration->getAccess())) {
+        if (!$this->get('security.context')->isGranted($configuration->getSecurity())) {
             throw new AccessDeniedHttpException();
         }
 
@@ -140,7 +140,7 @@ class ResourceController extends Controller
     {
         $configuration = $this->getConfiguration();
 
-        if (!$this->get('security.context')->isGranted($configuration->getAccess())) {
+        if (!$this->get('security.context')->isGranted($configuration->getSecurity())) {
             throw new AccessDeniedHttpException();
         }
 

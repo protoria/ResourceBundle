@@ -47,7 +47,7 @@ class Configuration
     /**
      * @var array
      */
-    private $access;
+    private $security;
 
     /**
      * @var ManagerFactory
@@ -71,7 +71,7 @@ class Configuration
      */
     public function __construct()
     {
-        $this->access = array('ROLE_ADMIN');
+        $this->security = array('ROLE_ADMIN');
     }
 
     /**
@@ -219,9 +219,9 @@ class Configuration
      *
      * @return $this
      */
-    public function setAccess($access)
+    public function setSecurity($access)
     {
-        $this->access = $access;
+        $this->security = $access;
 
         return $this;
     }
@@ -229,8 +229,8 @@ class Configuration
     /**
      * @return array
      */
-    public function getAccess()
+    public function getSecurity()
     {
-        return $this->access;
+        return $this->security;
     }
 }

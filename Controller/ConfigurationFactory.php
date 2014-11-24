@@ -46,6 +46,7 @@ class ConfigurationFactory implements ManagerFactoryInterface
         isset($config['form_type']) && $configuration->setForm($config['form_type']);
         isset($config['manager']) && $configuration->setManager($config['manager']);
         isset($config['template']) && $configuration->setTemplate($config['template']);
+        isset($config['security']) && $configuration->setSecurity($config['security']);
 
         return $configuration;
     }
