@@ -58,7 +58,9 @@ class ResourceLoader implements LoaderInterface
     private function getControllerConfiguration($config, $action)
     {
         $configutaion = isset($config['controller'][$action]) ? $config['controller'][$action] : array();
-        isset($config['controller']['security']) && $configutaion['security'] = $config['controller']['security'];
+        !empty($this->defaults['controller']['security']) && $configutaion['security'] = $this->defaults['controller']['security'];
+        !empty($config['controller']['security']) && $configutaion['security'] = $config['controller']['security'];
+
 
         return $configutaion;
     }

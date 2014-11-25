@@ -67,14 +67,6 @@ class Configuration
     }
 
     /**
-     * Construct
-     */
-    public function __construct()
-    {
-        $this->security = array('ROLE_ADMIN');
-    }
-
-    /**
      * @param string $bundle
      *
      * @return $this
