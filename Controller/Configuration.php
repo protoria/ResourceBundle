@@ -55,6 +55,11 @@ class Configuration
     private $managerFactory;
 
     /**
+     * @var array
+     */
+    private $redirect;
+
+    /**
      * @param \Igdr\Bundle\ManagerBundle\Manager\ManagerFactory $managerFactory
      *
      * @return $this
@@ -224,5 +229,25 @@ class Configuration
     public function getSecurity()
     {
         return $this->security;
+    }
+
+    /**
+     * @param array $redirect
+     *
+     * @return $this
+     */
+    public function setRedirect($redirect)
+    {
+        $this->redirect = $redirect;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRedirect()
+    {
+        return $this->redirect;
     }
 }

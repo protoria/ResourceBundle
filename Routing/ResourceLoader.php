@@ -60,7 +60,7 @@ class ResourceLoader implements LoaderInterface
         $configutaion = isset($config['controller'][$action]) ? $config['controller'][$action] : array();
         !empty($this->defaults['controller']['security']) && $configutaion['security'] = $this->defaults['controller']['security'];
         !empty($config['controller']['security']) && $configutaion['security'] = $config['controller']['security'];
-
+        !empty($config['controller']['redirect']) && $configutaion['redirect'] = $config['controller']['redirect'];
 
         return $configutaion;
     }
@@ -91,7 +91,9 @@ class ResourceLoader implements LoaderInterface
                 continue;
             }
 
-            $path = rtrim($this->defaults['base_url'], '/') . '/' . str_replace('.', '/', $name);
+
+            $path = !empty($config['controller']['route']) ? $config['controller']['route'] : '/' . str_replace('.', '/', $name);
+            $path = rtrim($this->defaults['base_url'], '/') . $path;
             $id   = $this->defaults['route_prefix'] . '.' . $name;
 
             $routes->add($id . '.index', new Route($path, array(

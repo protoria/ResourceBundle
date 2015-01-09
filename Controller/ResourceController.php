@@ -101,7 +101,7 @@ class ResourceController extends Controller
             $form->submit($request);
             if ($form->isValid()) {
                 //save entity
-                $configuration->getManager()->save($entity);
+                $configuration->getManager()->save($form->getData());
 
                 //notice
                 $this->get('session')->getFlashBag()->add('success', $this->get('translator')->trans('admin.form.message.success.text'));
@@ -196,7 +196,13 @@ class ResourceController extends Controller
      */
     protected function createUrl(Request $request, $action, $params = array())
     {
-        $arr = explode('.', $request->attributes->get('_route'));
+        $redirectConfig = $this->configuration->getRedirect();
+        if ($action == 'index' && !empty($redirectConfig)) {
+            return $this->generateUrl($redirectConfig['route'], $this->parse($redirectConfig['parameters'], $request));
+        }
+
+        $route = $request->attributes->get('_route');
+        $arr = explode('.', $route);
         array_pop($arr);
         $arr[] = $action;
 
@@ -212,7 +218,7 @@ class ResourceController extends Controller
     private function getRedirectUrl(Request $request, $id)
     {
         if ($request->get('cmd') == self::CMD_APPLY && $id) {
-            $url = $this->createUrl($request, 'edit', array('id' => $id));
+            $url = $request->server->get('HTTP_REFERER');
         } elseif ($request->get('cmd') == self::CMD_CREATE_ANOTHER) {
             $url = $this->createUrl($request, 'add');
         } else {
@@ -220,5 +226,29 @@ class ResourceController extends Controller
         }
 
         return $url;
+    }
+
+    /**
+     * @param array   $parameters
+     * @param Request $request
+     *
+     * @return array
+     */
+    public function parse(array $parameters, Request $request)
+    {
+        foreach ($parameters as $key => $value) {
+            if (is_array($value)) {
+                $parameters[$key] = $this->parse($value, $request);
+            }
+            if (is_string($value) && 0 === strpos($value, '$')) {
+                $parameterName    = substr($value, 1);
+                $parameters[$key] = $request->get($parameterName);
+            }
+            if (is_string($value) && 0 === strpos($value, 'expr:')) {
+                $parameters[$key] = $this->expression->evaluate(substr($value, 5));
+            }
+        }
+
+        return $parameters;
     }
 }
