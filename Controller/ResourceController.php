@@ -177,7 +177,7 @@ class ResourceController extends Controller
      * @param Request $request
      * @param string  $action
      */
-    private function createCrumbs(Request $request, $action = '')
+    protected function createCrumbs(Request $request, $action = '')
     {
         $breadcrumbs = $this->get("white_october_breadcrumbs");
         $breadcrumbs->addItem($this->getConfiguration()->getPageTitle() . '.index', $this->createUrl($request, 'index'));
