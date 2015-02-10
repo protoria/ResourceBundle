@@ -116,7 +116,6 @@ class ResourceConfiguration implements ConfigurationInterface
                                         ->requiresAtLeastOneElement()
                                         ->useAttributeAsKey('name')
                                         ->prototype('array')
-                                            ->requiresAtLeastOneElement()
                                             ->useAttributeAsKey('name')
                                             ->prototype('scalar')
                                         ->end()
