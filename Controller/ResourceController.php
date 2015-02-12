@@ -107,7 +107,7 @@ class ResourceController extends Controller
                 $this->get('session')->getFlashBag()->add('success', $this->get('translator')->trans('admin.form.message.success.text'));
 
                 //redirect
-                return $this->redirect($this->getRedirectUrl($request, $id));
+                return $this->redirect($this->getRedirectUrl($request, $entity->getId()));
             } else {
                 $this->get('session')->getFlashBag()->add('notice', $this->get('translator')->trans('admin.form.message.error.text'));
             }
@@ -202,7 +202,7 @@ class ResourceController extends Controller
         }
 
         $route = $request->attributes->get('_route');
-        $arr = explode('.', $route);
+        $arr   = explode('.', $route);
         array_pop($arr);
         $arr[] = $action;
 
