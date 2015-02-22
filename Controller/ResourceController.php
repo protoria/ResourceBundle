@@ -218,7 +218,7 @@ class ResourceController extends Controller
     private function getRedirectUrl(Request $request, $id)
     {
         if ($request->get('cmd') == self::CMD_APPLY && $id) {
-            $url = $request->server->get('HTTP_REFERER');
+            $url = $this->createUrl($request, 'edit', ['id' => $id]);
         } elseif ($request->get('cmd') == self::CMD_CREATE_ANOTHER) {
             $url = $this->createUrl($request, 'add');
         } else {
