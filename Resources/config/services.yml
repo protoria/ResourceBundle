@@ -1,9 +1,6 @@
-parameters:
-    resource.controller: Igdr\Bundle\ResourceBundle\Controller\ResourceController
-
 services:
     resource.controller.abstract:
-        class: %resource.controller%
+        class: Igdr\Bundle\ResourceBundle\Controller\ResourceController
         calls:
             - [setContainer, [@service_container]]
 
