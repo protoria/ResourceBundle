@@ -37,9 +37,6 @@ class ResourceController extends Controller
     {
         if ($this->configuration === null) {
             $this->configuration = $this->get('resource.controller.configuration_factory')->create();
-
-            //event
-            $this->get('event_dispatcher')->dispatch(IgdrResourceEvents::INIT_CONFIGURATION, new ConfigurationEvent($this->configuration));
         }
 
         return $this->configuration;
@@ -60,9 +57,6 @@ class ResourceController extends Controller
         }
 
         $manager = $configuration->getManager();
-
-        //list event
-        $this->get('event_dispatcher')->dispatch(IgdrResourceEvents::INIT_MANAGER, new ManagerEvent($manager));
 
         //init grid
         $grid = $this->get('widget_grid_factory')->createGrid($this->get($configuration->getGrid())->setManager($manager));
@@ -105,9 +99,6 @@ class ResourceController extends Controller
 
         //get data
         $entity = $this->getEntity($id, $request);
-
-        //list event
-        $this->get('event_dispatcher')->dispatch(IgdrResourceEvents::INIT_ENTITY, new EntityEvent($entity));
 
         //create form
         $form = $this->createForm($configuration->getForm(), $entity);
@@ -176,10 +167,6 @@ class ResourceController extends Controller
     {
         //get data
         $manager = $this->getConfiguration()->getManager();
-
-        //init manager event
-        $this->get('event_dispatcher')->dispatch(IgdrResourceEvents::INIT_MANAGER, new ManagerEvent($manager));
-
         if ($id) {
             $manager->setId($id);
             $entity = $manager->findOne();
