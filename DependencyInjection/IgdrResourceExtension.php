@@ -89,7 +89,7 @@ class IgdrResourceExtension extends Extension
 
             //form
             $id    = $arr[0] . '.form.' . $arr[1];
-            $class = $this->formatFormName($bundleName, $resourceName, $defaults);
+            $class = isset($config['controller']['form']) ? $config['controller']['form'] : $this->formatFormName($bundleName, $resourceName, $defaults);
             if ($container->hasDefinition($id) === false && class_exists($class)) {
                 $definition = new Definition($class);
                 $definition->addTag('form.type', array('alias' => str_replace('.', '_', $name)));
@@ -104,7 +104,7 @@ class IgdrResourceExtension extends Extension
 
             //grid
             $id    = $arr[0] . '.grid.' . $arr[1];
-            $class = $this->formatGridName($bundleName, $resourceName, $defaults);
+            $class = isset($config['controller']['grid']) ? $config['controller']['grid'] : $this->formatGridName($bundleName, $resourceName, $defaults);
             if (class_exists($class)) {
                 $definition = new Definition($class);
 
