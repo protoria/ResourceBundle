@@ -101,7 +101,7 @@ class ResourceController extends Controller
         $entity = $this->getEntity($id, $request);
 
         //create form
-        $form = $this->createForm($configuration->getForm(), $entity);
+        $form = $this->getForm($entity, $request);
 
         //save
         if ($request->isMethod('POST')) {
@@ -181,16 +181,27 @@ class ResourceController extends Controller
     }
 
     /**
+     * @param object  $entity
+     * @param Request $request
+     *
+     * @return \Symfony\Component\Form\Form
+     */
+    protected function getForm($entity, Request $request)
+    {
+        return $this->createForm($this->getConfiguration()->getForm(), $entity);
+    }
+
+    /**
      * @param Request $request
      * @param string  $action
      */
     protected function createCrumbs(Request $request, $action = '')
     {
         $breadcrumbs = $this->get("white_october_breadcrumbs");
-        $breadcrumbs->addItem($this->getConfiguration()->getPageTitle() . '.index', $this->createUrl($request, 'index'));
+        $breadcrumbs->addItem($this->getConfiguration()->getPageTitle().'.index', $this->createUrl($request, 'index'));
 
         if ($action) {
-            $breadcrumbs->addItem($this->getConfiguration()->getPageTitle() . '.' . $action);
+            $breadcrumbs->addItem($this->getConfiguration()->getPageTitle().'.'.$action);
         }
     }
 
@@ -209,7 +220,7 @@ class ResourceController extends Controller
         }
 
         $route = $request->attributes->get('_route');
-        $arr   = explode('.', $route);
+        $arr = explode('.', $route);
         array_pop($arr);
         $arr[] = $action;
 
@@ -248,7 +259,7 @@ class ResourceController extends Controller
                 $parameters[$key] = $this->parse($value, $request);
             }
             if (is_string($value) && 0 === strpos($value, '$')) {
-                $parameterName    = substr($value, 1);
+                $parameterName = substr($value, 1);
                 $parameters[$key] = $request->get($parameterName);
             }
             if (is_string($value) && 0 === strpos($value, 'expr:')) {
