@@ -52,7 +52,7 @@ class ResourceController extends Controller
     {
         $configuration = $this->getConfiguration();
 
-        if (!$this->get('security.context')->isGranted($configuration->getSecurity())) {
+        if (!$this->get('security.authorization_checker')->isGranted($configuration->getSecurity())) {
             throw new AccessDeniedHttpException();
         }
 
@@ -77,7 +77,7 @@ class ResourceController extends Controller
                 'grid'          => $grid,
                 'createUrl'     => $this->createUrl($request, 'add'),
                 'page'          => 'index',
-                'configuration' => $configuration
+                'configuration' => $configuration,
             )
         );
     }
@@ -93,7 +93,7 @@ class ResourceController extends Controller
     {
         $configuration = $this->getConfiguration();
 
-        if (!$this->get('security.context')->isGranted($configuration->getSecurity())) {
+        if (!$this->get('security.authorization_checker')->isGranted($configuration->getSecurity())) {
             throw new AccessDeniedHttpException();
         }
 
@@ -105,8 +105,8 @@ class ResourceController extends Controller
 
         //save
         if ($request->isMethod('POST')) {
-            $form->submit($request);
-            if ($form->isValid()) {
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
                 //save entity
                 $configuration->getManager()->save($form->getData());
 
@@ -131,7 +131,7 @@ class ResourceController extends Controller
                 'backUrl'       => $this->createUrl($request, 'index'),
                 'page'          => $entity && $entity->getId() ? 'edit' : 'add',
                 'configuration' => $configuration,
-                'entity'        => $entity
+                'entity'        => $entity,
             )
         );
     }
@@ -147,7 +147,7 @@ class ResourceController extends Controller
     {
         $configuration = $this->getConfiguration();
 
-        if (!$this->get('security.context')->isGranted($configuration->getSecurity())) {
+        if (!$this->get('security.authorization_checker')->isGranted($configuration->getSecurity())) {
             throw new AccessDeniedHttpException();
         }
 

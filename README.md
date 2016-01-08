@@ -5,7 +5,7 @@ Installation
 
 Add the bundle to your `composer.json`:
 
-    "igdr/resource-bundle" : "dev-master"
+    composer require igdr/resource-bundle
 
 and run:
 
@@ -26,9 +26,6 @@ Then add the ResourceBundle to your application kernel:
 Add configuration to config.yml
 
     igdr_resource:
-        namespace:
-            form: "App\Bundle\{Bundle}Bundle\Form\Type\Admin\{Entity}Type"   #Namespace mask for form types
-            grid: "App\Bundle\{Bundle}Bundle\Grid\Type\Admin\{Entity}Type"   #Namespace mask for grid types
         controller:
             index:
                 template: "@AppBase/Admin/Abstract/index.html.twig"           

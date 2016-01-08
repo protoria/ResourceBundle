@@ -43,7 +43,7 @@ class ConfigurationFactory implements ManagerFactoryInterface
         $configuration->setManagerFactory($this->managerFactory);
         $configuration->setBundle($this->getBundle());
         $configuration->setResource($this->getResource());
-        isset($config['form_type']) && $configuration->setForm($config['form_type']);
+        isset($config['form']) && $configuration->setForm($config['form']);
         isset($config['manager']) && $configuration->setManager($config['manager']);
         isset($config['template']) && $configuration->setTemplate($config['template']);
         isset($config['security']) && $configuration->setSecurity($config['security']);

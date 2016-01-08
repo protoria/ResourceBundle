@@ -5,7 +5,7 @@ namespace Igdr\Bundle\ResourceBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Class ApplicationResourceBundle
+ * Class IgdrResourceBundle
  */
 class IgdrResourceBundle extends Bundle
 {

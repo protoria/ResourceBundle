@@ -62,6 +62,10 @@ class ResourceLoader implements LoaderInterface
         !empty($config['controller']['security']) && $configutaion['security'] = $config['controller']['security'];
         !empty($config['controller']['redirect']) && $configutaion['redirect'] = $config['controller']['redirect'];
 
+        if (isset($config['controller']['form'])) {
+            $configutaion['form'] = $config['controller']['form'];
+        }
+
         return $configutaion;
     }
 
