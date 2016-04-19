@@ -1,12 +1,12 @@
 {
-    "name": "igdr/resource-bundle",
+    "name": "protoria/resource-bundle",
     "type": "symfony-bundle",
     "description": "Resource Bundle",
-    "keywords": ["Igdr", "Resource"],
+    "keywords": ["Protoria", "Resource"],
     "require": {
         "php": ">=5.3.3",
         "symfony/symfony": ">=2.4",
-        "igdr/manager-bundle": "dev-master"
+        "protoria/manager-bundle": "dev-master"
     },
     "autoload": {
         "psr-0": {
